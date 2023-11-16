@@ -106,7 +106,7 @@ public class Game {
     private ImageIcon getResizedImageIcon(String[] word) {
         // lấy path của ảnh
         String wordString = String.join("", word);
-        String originalImagePath = "src/" + wordString + ".jpg";
+        String originalImagePath = "src/images/" + wordString + ".jpg";
 
         try {
             // Đọc hình ảnh gốc từ path
