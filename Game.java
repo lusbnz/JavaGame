@@ -1,4 +1,5 @@
 // import các thư viện cần sử dụng
+package JavaGame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +22,10 @@ public class Game {
     private final JTextField inputField;
     private final JButton submitButton;
     private final JButton nextButton;
+    private final JButton soundButton;
     private Clip correctGuessSound;
     private Clip incorrectGuessSound;
+    private Clip defaultSound;
 
     // mảng chứa các từ cần đoán, đặt tên file ảnh .jpg trùng với tên trong mảng viết hoa
     private final String[][] danhSachHinhAnh = {
@@ -59,6 +62,7 @@ public class Game {
         inputField = new JTextField(10); // độ dài ban đầu là 10 cột
         submitButton = new JButton("Submit");
         nextButton = new JButton("Next");
+        soundButton = new JButton("Sound");
 
         displayArea = new JTextArea(5, 5); // kích thước ban đầu là 5 dòng 5 cột
         displayArea.setEditable(false); // không cho chỉnh sửa vùng hiển thị thông tin
@@ -78,6 +82,7 @@ public class Game {
         southPanel.add(inputField);
         southPanel.add(submitButton);
         southPanel.add(nextButton);
+        southPanel.add(soundButton);
 
         // cho các panel vào miền
         frame.add(imageLabel, BorderLayout.NORTH);
@@ -106,17 +111,24 @@ public class Game {
         });
         submitButton.addActionListener(e -> handleGuess());
         nextButton.addActionListener(e -> resetGame());
+        soundButton.addActionListener(e -> onOffSound());
     }
 
     private void loadSounds() {
         try {
             correctGuessSound = AudioSystem.getClip();
-            AudioInputStream correctGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/true.wav"));
+            AudioInputStream correctGuessStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/true.wav"));
             correctGuessSound.open(correctGuessStream);
 
             incorrectGuessSound = AudioSystem.getClip();
-            AudioInputStream incorrectGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/false.wav"));
+            AudioInputStream incorrectGuessStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/false.wav"));
             incorrectGuessSound.open(incorrectGuessStream);
+
+            defaultSound = AudioSystem.getClip();
+            AudioInputStream defaultSoundStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/defaultSound.wav"));
+            defaultSound.open(defaultSoundStream);
+            // Chạy loop vô hạn cho sound nền
+            defaultSound.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
         }
     }
@@ -125,7 +137,7 @@ public class Game {
     private ImageIcon getResizedImageIcon(String[] word) {
         // lấy path của ảnh
         String wordString = String.join("", word);
-        String originalImagePath = "src/images/" + wordString + ".jpg";
+        String originalImagePath = "src/JavaGame/images/" + wordString + ".jpg";
 
         try {
             // Đọc hình ảnh gốc từ path
@@ -245,6 +257,14 @@ public class Game {
         if (incorrectGuessSound != null && !incorrectGuessSound.isRunning()) {
             incorrectGuessSound.setFramePosition(0);
             incorrectGuessSound.start();
+        }
+    }
+    
+    private void onOffSound(){
+        if (defaultSound != null && defaultSound.isRunning()){
+            defaultSound.stop();
+        } else if (defaultSound != null && !defaultSound.isRunning()){
+            defaultSound.start();
         }
     }
 
