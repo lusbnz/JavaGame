@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.sound.sampled.*;
 
 public class Game {
 
@@ -20,6 +21,8 @@ public class Game {
     private final JTextField inputField;
     private final JButton submitButton;
     private final JButton nextButton;
+    private Clip correctGuessSound;
+    private Clip incorrectGuessSound;
 
     // mảng chứa các từ cần đoán, đặt tên file ảnh .jpg trùng với tên trong mảng viết hoa
     private final String[][] danhSachHinhAnh = {
@@ -81,6 +84,9 @@ public class Game {
         frame.add(displayArea, BorderLayout.CENTER);
         frame.add(southPanel, BorderLayout.SOUTH);
 
+        // thực hiện load nhạc
+        loadSounds();
+
         // gọi hàm thực thi hành động
         setupActionListeners();
     }
@@ -100,6 +106,19 @@ public class Game {
         });
         submitButton.addActionListener(e -> handleGuess());
         nextButton.addActionListener(e -> resetGame());
+    }
+
+    private void loadSounds() {
+        try {
+            correctGuessSound = AudioSystem.getClip();
+            AudioInputStream correctGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/true.wav"));
+            correctGuessSound.open(correctGuessStream);
+
+            incorrectGuessSound = AudioSystem.getClip();
+            AudioInputStream incorrectGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/false.wav"));
+            incorrectGuessSound.open(incorrectGuessStream);
+        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
+        }
     }
 
     // chỉnh lại kích thước chung của ảnh
@@ -172,6 +191,7 @@ public class Game {
                     if (!coChu) {
                         soLanDoanSai++;
                         displayArea.setText("Sai rồi! Bạn đã sai " + soLanDoanSai + " lần.");
+                        playIncorrectGuessSound();
                     }
                 }
             } else {
@@ -193,6 +213,7 @@ public class Game {
 
             if (String.valueOf(kyTuDoan).equals(String.join("", tuCanDoan))) {
                 daDoanHet = true;
+                playCorrectGuessSound();
             }
         }
 
@@ -211,6 +232,20 @@ public class Game {
         }
         inputField.setText("");
         inputField.requestFocus(); // đặt con trỏ vào vị trí ô input
+    }
+
+    private void playCorrectGuessSound() {
+        if (correctGuessSound != null && !correctGuessSound.isRunning()) {
+            correctGuessSound.setFramePosition(0);
+            correctGuessSound.start();
+        }
+    }
+
+    private void playIncorrectGuessSound() {
+        if (incorrectGuessSound != null && !incorrectGuessSound.isRunning()) {
+            incorrectGuessSound.setFramePosition(0);
+            incorrectGuessSound.start();
+        }
     }
 
     public void display() {
