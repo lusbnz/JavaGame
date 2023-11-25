@@ -1,5 +1,4 @@
-// import các thư viện cần sử dụng
-package JavaGame;
+package Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,101 +14,106 @@ import javax.sound.sampled.*;
 
 public class Game {
 
-    // khởi tạo các components
     private final JFrame frame;
     private final JLabel imageLabel;
     private final JTextArea displayArea;
-    private final JTextField inputField;
+    final JTextField inputField;
     private final JButton submitButton;
     private final JButton nextButton;
     private final JButton soundButton;
+    private final JLabel attemptsLabel;
     private Clip correctGuessSound;
     private Clip incorrectGuessSound;
     private Clip defaultSound;
 
-    // mảng chứa các từ cần đoán, đặt tên file ảnh .jpg trùng với tên trong mảng viết hoa
     private final String[][] danhSachHinhAnh = {
         {"D", "O", "G"},
         {"H", "O", "U", "S", "E"},
         {"T", "R", "E", "E"}
     };
 
-    // khởi tạo các biến cần đoán
     private final int soLuongHinhAnh = danhSachHinhAnh.length;
     private int luaChonHinhAnh = (int) (Math.random() * soLuongHinhAnh);
     private String[] tuCanDoan = danhSachHinhAnh[luaChonHinhAnh];
     private int doDaiTu = tuCanDoan.length;
 
-    // khởi tạo các biến đoán
     private char[] kyTuDoan = new char[doDaiTu];
     private boolean daDoanHet = false;
     private int soLanDoanSai = 0;
     private final int soLanDoanToiDa = 5;
 
-    // constructor
     public Game() {
-        // khung frame cho màn hình game
         frame = new JFrame("Game Nhìn hình đoán chữ");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 800);
         frame.setLayout(new BorderLayout());
 
-        // hình ảnh cần đoán
         imageLabel = new JLabel();
-        imageLabel.setHorizontalAlignment(JLabel.CENTER); // cho hình ảnh vào chính giữa màn hình
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // các phím chức năng
-        inputField = new JTextField(10); // độ dài ban đầu là 10 cột
+        inputField = new JTextField(10);
         submitButton = new JButton("Submit");
         nextButton = new JButton("Next");
         soundButton = new JButton("Sound");
 
-        displayArea = new JTextArea(5, 5); // kích thước ban đầu là 5 dòng 5 cột
-        displayArea.setEditable(false); // không cho chỉnh sửa vùng hiển thị thông tin
-        displayArea.setFont(new Font("Arial", Font.PLAIN, 20)); // font chữ
+        attemptsLabel = new JLabel("Remaining Attempts: " + (soLanDoanToiDa - soLanDoanSai));
+        attemptsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        attemptsLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        // thiết lập kích thước vùng ưu tiên
+        displayArea = new JTextArea(5, 5);
+        displayArea.setEditable(false);
+        displayArea.setFont(new Font("Arial", Font.PLAIN, 20));
+
         imageLabel.setPreferredSize(new Dimension(1000, 500));
         displayArea.setPreferredSize(new Dimension(1000, 100));
 
-        // cho hình ảnh vào panel
         ImageIcon icon = getResizedImageIcon(tuCanDoan);
         imageLabel.setIcon(icon);
 
-        // cho các phím chức năng vào panel
         JPanel southPanel = new JPanel();
-        southPanel.setLayout(new FlowLayout());
-        southPanel.add(inputField);
-        southPanel.add(submitButton);
-        southPanel.add(nextButton);
-        southPanel.add(soundButton);
+        southPanel.setLayout(new BorderLayout());
 
-        // cho các panel vào miền
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout());
+        buttonPanel.add(inputField);
+        buttonPanel.add(submitButton);
+        buttonPanel.add(nextButton);
+        buttonPanel.add(soundButton);
+
+        JPanel remainingLivesPanel = new JPanel();
+        remainingLivesPanel.setLayout(new FlowLayout());
+        remainingLivesPanel.add(attemptsLabel);
+
+        southPanel.add(remainingLivesPanel, BorderLayout.NORTH);
+        southPanel.add(buttonPanel, BorderLayout.SOUTH);
+
         frame.add(imageLabel, BorderLayout.NORTH);
         frame.add(displayArea, BorderLayout.CENTER);
         frame.add(southPanel, BorderLayout.SOUTH);
 
-        // thực hiện load nhạc
         loadSounds();
 
-        // gọi hàm thực thi hành động
         setupActionListeners();
     }
 
     private void setupActionListeners() {
-        inputField.addActionListener(e -> handleGuess());
-        // lắng nghe sự kiện Key sử dụng lớp KeyAdapter
+        inputField.addActionListener(e -> {
+            handleGuess();
+            updateAttemptsLabel();
+        });
         inputField.addKeyListener(new KeyAdapter() {
             @Override
-            // khi một phím được nhả sẽ gọi phương thức keyReleased
             public void keyReleased(KeyEvent e) {
-                // xảy ra khi bấm nút Enter
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     handleGuess();
+                    updateAttemptsLabel();
                 }
             }
         });
-        submitButton.addActionListener(e -> handleGuess());
+        submitButton.addActionListener(e -> {
+            handleGuess();
+            updateAttemptsLabel();
+        });
         nextButton.addActionListener(e -> resetGame());
         soundButton.addActionListener(e -> onOffSound());
     }
@@ -117,34 +121,28 @@ public class Game {
     private void loadSounds() {
         try {
             correctGuessSound = AudioSystem.getClip();
-            AudioInputStream correctGuessStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/true.wav"));
+            AudioInputStream correctGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/true.wav"));
             correctGuessSound.open(correctGuessStream);
 
             incorrectGuessSound = AudioSystem.getClip();
-            AudioInputStream incorrectGuessStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/false.wav"));
+            AudioInputStream incorrectGuessStream = AudioSystem.getAudioInputStream(new File("src/audios/false.wav"));
             incorrectGuessSound.open(incorrectGuessStream);
 
             defaultSound = AudioSystem.getClip();
-            AudioInputStream defaultSoundStream = AudioSystem.getAudioInputStream(new File("src/JavaGame/audios/defaultSound.wav"));
+            AudioInputStream defaultSoundStream = AudioSystem.getAudioInputStream(new File("src/audios/defaultSound.wav"));
             defaultSound.open(defaultSoundStream);
-            // Chạy loop vô hạn cho sound nền
             defaultSound.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (LineUnavailableException | UnsupportedAudioFileException | IOException e) {
         }
     }
 
-    // chỉnh lại kích thước chung của ảnh
     private ImageIcon getResizedImageIcon(String[] word) {
-        // lấy path của ảnh
         String wordString = String.join("", word);
-        String originalImagePath = "src/JavaGame/images/" + wordString + ".jpg";
+        String originalImagePath = "src/images/" + wordString + ".jpg";
 
         try {
-            // Đọc hình ảnh gốc từ path
             BufferedImage originalImage = ImageIO.read(new File(originalImagePath));
-            // Kiểm tra xem hình ảnh đã được đọc thành công hay không
             if (originalImage != null) {
-                // Thay đổi kích thước hình ảnh
                 Image resizedImage = originalImage.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
                 return new ImageIcon(resizedImage);
             } else {
@@ -155,21 +153,24 @@ public class Game {
         return null;
     }
 
-    // reset khi bấm nút next
+    private void updateAttemptsLabel() {
+        int remainingAttempts = soLanDoanToiDa - soLanDoanSai;
+        attemptsLabel.setText("Số mạng còn lại: " + remainingAttempts);
+    }
+
     private void resetGame() {
-        // kiểm tra trùng lặp ảnh vì sử dụng random
+        soLanDoanSai = 0;
+        updateAttemptsLabel();
         int anhCu = luaChonHinhAnh;
         while (anhCu == luaChonHinhAnh) {
             luaChonHinhAnh = (int) (Math.random() * soLuongHinhAnh);
         }
 
-        // thiết lập game mới
         tuCanDoan = danhSachHinhAnh[luaChonHinhAnh];
         doDaiTu = tuCanDoan.length;
 
         kyTuDoan = new char[doDaiTu];
         daDoanHet = false;
-        soLanDoanSai = 0;
 
         ImageIcon newIcon = getResizedImageIcon(tuCanDoan);
         imageLabel.setIcon(newIcon);
@@ -179,47 +180,53 @@ public class Game {
         submitButton.setEnabled(true);
         displayArea.setText("");
 
-        // đặt con trỏ vào vị trí ô input
         inputField.requestFocusInWindow();
     }
 
-    // xử lí sự kiện đoán
     private void handleGuess() {
-        // kiểm tra điều kiện sự kiện đoán
         if (!daDoanHet && soLanDoanSai < soLanDoanToiDa) {
+            displayArea.setText("");
             String doan = inputField.getText().toUpperCase();
-
-            if (doan.matches("[A-Z]+")) {
-                for (char letter : doan.toCharArray()) {
-                    boolean coChu = false;
-                    for (int i = 0; i < doDaiTu; i++) {
-                        if (tuCanDoan[i].equals(String.valueOf(letter)) && kyTuDoan[i] == 0) {
-                            kyTuDoan[i] = letter;
-                            coChu = true;
-                            break;
-                        }
-                    }
-
-                    if (!coChu) {
-                        soLanDoanSai++;
-                        displayArea.setText("Sai rồi! Bạn đã sai " + soLanDoanSai + " lần.");
-                        playIncorrectGuessSound();
-                    }
+            int soChuCaiDoan = doan.length();
+            if (soChuCaiDoan > 1) {
+                if (doan.equals(String.join("", tuCanDoan))) {
+                    daDoanHet = true;
+                    playCorrectGuessSound();
+                } else {
+                    soLanDoanSai++;
+                    playIncorrectGuessSound();
                 }
             } else {
-                displayArea.setText("Vui lòng chỉ đoán các chữ cái từ A đến Z.");
+                if (doan.matches("[A-Z]+")) {
+                    for (char letter : doan.toCharArray()) {
+                        boolean coChu = false;
+                        for (int i = 0; i < doDaiTu; i++) {
+                            if (tuCanDoan[i].equals(String.valueOf(letter)) && kyTuDoan[i] == 0) {
+                                kyTuDoan[i] = letter;
+                                coChu = true;
+                                break;
+                            }
+                        }
+
+                        if (!coChu) {
+                            soLanDoanSai++;
+                            playIncorrectGuessSound();
+                        }
+                    }
+                } else {
+                    displayArea.setText("Vui lòng chỉ đoán các chữ cái từ A đến Z.");
+                }
             }
 
             StringBuilder displayText = new StringBuilder();
             for (char c : kyTuDoan) {
                 if (c == 0) {
-                    displayText.append("_"); // nếu có từ trống thì hiển thị _
+                    displayText.append("_");
                 } else {
                     displayText.append(c);
                 }
             }
 
-            // hiện thị thông tin
             displayArea.append("\nHãy đoán từ có " + doDaiTu + " chữ cái:\n");
             displayArea.append(displayText.toString() + "\n");
 
@@ -229,7 +236,6 @@ public class Game {
             }
         }
 
-        // kết thúc sự kiện đoán
         if (daDoanHet || soLanDoanSai == soLanDoanToiDa) {
             if (daDoanHet) {
                 displayArea.setText("Chúc mừng! Bạn đã đoán đúng từ \"" + String.join("", tuCanDoan) + "\".");
@@ -243,7 +249,7 @@ public class Game {
 
         }
         inputField.setText("");
-        inputField.requestFocus(); // đặt con trỏ vào vị trí ô input
+        inputField.requestFocus();
     }
 
     private void playCorrectGuessSound() {
@@ -259,11 +265,11 @@ public class Game {
             incorrectGuessSound.start();
         }
     }
-    
-    private void onOffSound(){
-        if (defaultSound != null && defaultSound.isRunning()){
+
+    private void onOffSound() {
+        if (defaultSound != null && defaultSound.isRunning()) {
             defaultSound.stop();
-        } else if (defaultSound != null && !defaultSound.isRunning()){
+        } else if (defaultSound != null && !defaultSound.isRunning()) {
             defaultSound.start();
         }
     }
@@ -273,16 +279,13 @@ public class Game {
             @Override
             public void run() {
                 frame.setVisible(true);
-                inputField.requestFocusInWindow(); // đặt con trỏ vào vị trí ô input
+                inputField.requestFocusInWindow();
             }
         });
     }
 
     public static void main(String[] args) {
-        Game gameGUI = new Game();
-        // hiển thị giao diện
-        gameGUI.display();
-        // đặt con trỏ vào vị trí ô input
-        gameGUI.inputField.requestFocusInWindow();
+        MenuFrame menuFrame = new MenuFrame();
+        menuFrame.display();
     }
 }
