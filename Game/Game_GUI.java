@@ -1,4 +1,4 @@
-package Game;
+package Game_GUI;
 
 import java.awt.event.ActionListener;
 
@@ -7,9 +7,7 @@ public class Game_GUI extends javax.swing.JFrame {
     public Game_GUI() {
         initComponents();
     }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+                         
     private void initComponents() {
 
         BackGround = new javax.swing.JPanel();
@@ -33,7 +31,6 @@ public class Game_GUI extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanel11 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        SoundButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -301,10 +298,6 @@ public class Game_GUI extends javax.swing.JFrame {
                 .addGap(41, 41, 41))
         );
 
-        SoundButton.setBackground(new java.awt.Color(0, 0, 0));
-        SoundButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        SoundButton.setPreferredSize(new java.awt.Dimension(50, 50));
-
         javax.swing.GroupLayout BackGroundLayout = new javax.swing.GroupLayout(BackGround);
         BackGround.setLayout(BackGroundLayout);
         BackGroundLayout.setHorizontalGroup(
@@ -317,17 +310,12 @@ public class Game_GUI extends javax.swing.JFrame {
                         .addGap(269, 269, 269))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackGroundLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(152, 152, 152))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, BackGroundLayout.createSequentialGroup()
-                        .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(43, 43, 43))))
+                        .addGap(152, 152, 152))))
         );
         BackGroundLayout.setVerticalGroup(
             BackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(BackGroundLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
+                .addGap(140, 140, 140)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(58, 58, 58)
                 .addComponent(PlayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -337,42 +325,25 @@ public class Game_GUI extends javax.swing.JFrame {
         getContentPane().add(BackGround, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 600));
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
 
     
-    private void PlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PlayButtonActionPerformed
+    private void PlayButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
         new GamePlay().setVisible(true);
-    }//GEN-LAST:event_PlayButtonActionPerformed
+    }                                          
+    
+    private void startGame() {
+        new Game_GUI().dispose();
+        GamePlay gameGUI = new GamePlay();
+        gameGUI.dispose();
 
-    /**
-     * @param args the command line arguments
-     */
+    }
+    
+    
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Game_GUI().setVisible(true);
             }
@@ -380,10 +351,9 @@ public class Game_GUI extends javax.swing.JFrame {
     }
     
     // jLabel 11-19: là phần logo chữ WORD GUESS
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JPanel BackGround;
     private javax.swing.JButton PlayButton;
-    private javax.swing.JButton SoundButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -403,5 +373,5 @@ public class Game_GUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }
