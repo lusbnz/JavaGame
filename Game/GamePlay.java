@@ -28,40 +28,53 @@ public class GamePlay extends javax.swing.JFrame {
     private Clip correctGuessSound;
     private Clip incorrectGuessSound;
     private Clip defaultSound;
+    String folderPath = "src/images";
+    File folder = new File(folderPath);
+    File[] files = folder.listFiles();
 
-    private final String[][] danhSachHinhAnh = {
-        {"D", "O", "G"},
-        {"H", "O", "U", "S", "E"},
-        {"T", "R", "E", "E"}
-    };
+    private final String[][] danhSachHinhAnh = new String[files.length][];
 
-    private final int soLuongHinhAnh = danhSachHinhAnh.length;
-    private int luaChonHinhAnh = (int) (Math.random() * soLuongHinhAnh);
-    private String[] tuCanDoan = danhSachHinhAnh[luaChonHinhAnh];
-    private int doDaiTu = tuCanDoan.length;
+    private final int soLuongHinhAnh;
+    private int luaChonHinhAnh;
+    private String[] tuCanDoan;
+    private int doDaiTu;
 
     private char[] kyTuDoan = new char[doDaiTu];
     private boolean daDoanHet = false;
     private int soLanDoanSai = 0;
     private final int soLanDoanToiDa = 5;
-    
-    
+
     public GamePlay() {
+        // init variable and list image array
+        int i = 0;
+        for (File file : files) {
+            String[] nameOfImage = file.getName().split("\\.")[0].split("");
+                danhSachHinhAnh[i] = nameOfImage;
+                i++;
+        }
+        soLuongHinhAnh = danhSachHinhAnh.length;
+        luaChonHinhAnh = (int) (Math.random() * soLuongHinhAnh);
+        tuCanDoan = danhSachHinhAnh[luaChonHinhAnh];
+        doDaiTu = tuCanDoan.length;
+        
         initComponents();
-        
+
         attemptsLabel = new JLabel("Remaining Attempts: " + (soLanDoanToiDa - soLanDoanSai));
-        attemptsLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+        attemptsLabel.setFont(
+                new Font("Arial", Font.PLAIN, 20));
         attemptsLabel.setHorizontalAlignment(JLabel.CENTER);
-        
+
         ImageIcon icon = getResizedImageIcon(tuCanDoan);
+
         Picture.setIcon(icon);
-        
+
         loadSounds();
 
         setupActionListeners();
-        
+
     }
-    
+
     private void setupActionListeners() {
         WordField.addActionListener(e -> {
             handleGuess();
@@ -307,6 +320,55 @@ public class GamePlay extends javax.swing.JFrame {
         javax.swing.GroupLayout PlayBackGroundLayout = new javax.swing.GroupLayout(PlayBackGround);
         PlayBackGround.setLayout(PlayBackGroundLayout);
         PlayBackGroundLayout.setHorizontalGroup(
+                PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                .addContainerGap(170, Short.MAX_VALUE)
+                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
+                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                                .addGap(76, 76, 76)
+                                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                                                .addComponent(Picture, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(SoundOfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(41, 41, 41))
+                                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                                                .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(154, 154, 154))))
+                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                                .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(170, 170, 170)
+                                                                .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(33, 33, 33)))
+                                                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(57, 57, 57))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(177, 177, 177))))
+        );
+        PlayBackGroundLayout.setVerticalGroup(
+                PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                .addGap(47, 47, 47)
+                                                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                                                .addGap(70, 70, 70)
+                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(Picture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(SoundOfPicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(19, 19, 19)
+                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addContainerGap(83, Short.MAX_VALUE))
             PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PlayBackGroundLayout.createSequentialGroup()
                 .addContainerGap(194, Short.MAX_VALUE)
@@ -360,6 +422,9 @@ public class GamePlay extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
+    /**
+     * @param args the command line arguments
+     */
     
     public static void main(String args[]) {
     
@@ -368,16 +433,24 @@ public class GamePlay extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game_GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game_GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game_GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game_GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
       
         java.awt.EventQueue.invokeLater(new Runnable() {
