@@ -1,10 +1,9 @@
-package Game_GUI;
+package Game;
 
 /*
     Team 5.14: Game hỗ trợ học tập
  */
 
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,13 +17,11 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 
 public class GamePlay extends javax.swing.JFrame {
     
-    private final JLabel attemptsLabel;
     private Clip correctGuessSound;
     private Clip incorrectGuessSound;
     private Clip defaultSound;
@@ -43,8 +40,11 @@ public class GamePlay extends javax.swing.JFrame {
     private boolean daDoanHet = false;
     private int soLanDoanSai = 0;
     private final int soLanDoanToiDa = 5;
-
+    
+    
     public GamePlay() {
+        initComponents();
+        
         // init variable and list image array
         int i = 0;
         for (File file : files) {
@@ -57,24 +57,15 @@ public class GamePlay extends javax.swing.JFrame {
         tuCanDoan = danhSachHinhAnh[luaChonHinhAnh];
         doDaiTu = tuCanDoan.length;
         
-        initComponents();
-
-        attemptsLabel = new JLabel("Remaining Attempts: " + (soLanDoanToiDa - soLanDoanSai));
-
-        attemptsLabel.setFont(
-                new Font("Arial", Font.PLAIN, 20));
-        attemptsLabel.setHorizontalAlignment(JLabel.CENTER);
-
         ImageIcon icon = getResizedImageIcon(tuCanDoan);
-
         Picture.setIcon(icon);
-
+        
         loadSounds();
 
         setupActionListeners();
-
+        
     }
-
+    
     private void setupActionListeners() {
         WordField.addActionListener(e -> {
             handleGuess();
@@ -269,11 +260,10 @@ public class GamePlay extends javax.swing.JFrame {
     private void initComponents() {
 
         PlayBackGround = new javax.swing.JPanel();
-        WordField = new javax.swing.JTextField();
         SubmitButton = new javax.swing.JButton();
         NextButton = new javax.swing.JButton();
+        attemptsLabel = new javax.swing.JLabel();
         SoundButton = new javax.swing.JButton();
-        SoundOfPicture = new javax.swing.JButton();
         Picture = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         DisplayArea = new javax.swing.JTextArea();
@@ -286,6 +276,7 @@ public class GamePlay extends javax.swing.JFrame {
         WordField.setBackground(new java.awt.Color(0, 0, 0));
         WordField.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         WordField.setForeground(new java.awt.Color(255, 255, 255));
+        WordField.setAutoscrolls(false);
         WordField.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         SubmitButton.setBackground(new java.awt.Color(255, 153, 153));
@@ -300,119 +291,76 @@ public class GamePlay extends javax.swing.JFrame {
         NextButton.setText("Next");
         NextButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+        attemptsLabel.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        attemptsLabel.setForeground(new java.awt.Color(255, 51, 51));
+        attemptsLabel.setText("Số mạng còn lại: 5");
+
         SoundButton.setBackground(new java.awt.Color(0, 0, 0));
         SoundButton.setFont(new java.awt.Font("Vladimir Script", 3, 18)); // NOI18N
         SoundButton.setForeground(new java.awt.Color(102, 204, 255));
         SoundButton.setText("<//>");
         SoundButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        SoundButton.setFocusable(false);
         SoundButton.setPreferredSize(new java.awt.Dimension(50, 50));
-
-        SoundOfPicture.setBackground(new java.awt.Color(0, 0, 0));
-        SoundOfPicture.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        SoundButton.setRequestFocusEnabled(false);
 
         DisplayArea.setColumns(20);
         DisplayArea.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        DisplayArea.setForeground(new java.awt.Color(255, 153, 0));
+        DisplayArea.setForeground(new java.awt.Color(204, 102, 0));
         DisplayArea.setRows(3);
+        DisplayArea.setAutoscrolls(false);
         DisplayArea.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        DisplayArea.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        DisplayArea.setDisabledTextColor(new java.awt.Color(255, 153, 0));
+        DisplayArea.setEnabled(false);
+        DisplayArea.setFocusable(false);
+        DisplayArea.setSelectionColor(new java.awt.Color(255, 153, 0));
         jScrollPane1.setViewportView(DisplayArea);
 
         javax.swing.GroupLayout PlayBackGroundLayout = new javax.swing.GroupLayout(PlayBackGround);
         PlayBackGround.setLayout(PlayBackGroundLayout);
         PlayBackGroundLayout.setHorizontalGroup(
-                PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                .addContainerGap(170, Short.MAX_VALUE)
-                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
-                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                                .addGap(76, 76, 76)
-                                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                                                .addComponent(Picture, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addComponent(SoundOfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(41, 41, 41))
-                                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                                                .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(154, 154, 154))))
-                                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                                .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(170, 170, 170)
-                                                                .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(33, 33, 33)))
-                                                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(57, 57, 57))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(177, 177, 177))))
-        );
-        PlayBackGroundLayout.setVerticalGroup(
-                PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                .addGap(47, 47, 47)
-                                                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                                                .addGap(70, 70, 70)
-                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(Picture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(SoundOfPicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(18, 18, 18)
-                                                .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(19, 19, 19)
-                                                .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addContainerGap(83, Short.MAX_VALUE))
             PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                .addContainerGap(194, Short.MAX_VALUE)
+                .addContainerGap(188, Short.MAX_VALUE)
                 .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
                         .addComponent(Picture, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(SoundOfPicture, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57))
+                        .addGap(113, 113, 113))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
+                        .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(165, 165, 165))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
                         .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(PlayBackGroundLayout.createSequentialGroup()
                                 .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(186, 186, 186))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PlayBackGroundLayout.createSequentialGroup()
-                        .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(279, 279, 279))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                            .addComponent(attemptsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(72, 72, 72)))
+                .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(60, 60, 60))
         );
         PlayBackGroundLayout.setVerticalGroup(
             PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PlayBackGroundLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
                 .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(SoundButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(PlayBackGroundLayout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Picture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SoundOfPicture, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Picture, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(WordField, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(attemptsLabel)
+                        .addGap(2, 2, 2)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
                         .addGroup(PlayBackGroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(NextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         SoundButton.getAccessibleContext().setAccessibleParent(SoundButton);
@@ -422,43 +370,29 @@ public class GamePlay extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    /**
-     * @param args the command line arguments
-     */
     
-    public static void main(String args[]) {
+    public static void main(String args[]) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
     
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Game_GUI.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Game_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
       
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new GamePlay().setVisible(true);
-            }
-        });
+        Game_GUI gg = new Game_GUI();
+        gg.display();
+        
     }
 
     // Variables declaration - do not modify                     
@@ -467,9 +401,9 @@ public class GamePlay extends javax.swing.JFrame {
     private javax.swing.JLabel Picture;
     private javax.swing.JPanel PlayBackGround;
     private javax.swing.JButton SoundButton;
-    private javax.swing.JButton SoundOfPicture;
     private javax.swing.JButton SubmitButton;
-    private javax.swing.JTextField WordField;
+    final javax.swing.JTextField WordField = new javax.swing.JTextField();
+    private javax.swing.JLabel attemptsLabel;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration                   
 }
