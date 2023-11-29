@@ -161,7 +161,7 @@ public class GamePlay extends javax.swing.JFrame {
             DisplayArea.setText("");
             String doan = WordField.getText().toUpperCase();
 
-            if (doan.length() == doDaiTu) {
+            if (doan.length() == doDaiTu || doan.length() > 1) {
                 if (doan.equals(String.join("", tuCanDoan))) {
                     kyTuDoan = doan.toCharArray();
                     daDoanHet = true;
