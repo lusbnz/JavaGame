@@ -289,7 +289,7 @@ public class GamePlay extends javax.swing.JFrame {
 
         attemptsLabel.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
         attemptsLabel.setForeground(new java.awt.Color(255, 51, 51));
-        attemptsLabel.setText("Số mạng còn lại: 5");
+        attemptsLabel.setText("Số mạng còn lại: 10");
 
         SoundButton.setBackground(new java.awt.Color(0, 0, 0));
         SoundButton.setFont(new java.awt.Font("Vladimir Script", 3, 18)); // NOI18N
